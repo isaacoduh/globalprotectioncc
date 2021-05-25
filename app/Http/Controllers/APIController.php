@@ -113,7 +113,7 @@ class APIController extends Controller
 
             // save image to database
 
-            $path = Storage::disk('public')->put($name, $contents);
+            Storage::disk('public')->put($name, $contents);
 
 
             return response()->json(['message' => 'Person Avatar Generated Successfully', 'data' => $person->avatar]);
