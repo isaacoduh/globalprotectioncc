@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
 class APIController extends Controller
 {
@@ -74,5 +75,28 @@ class APIController extends Controller
 
         // return json response
         return response()->json(['message' => 'Person data retrieved!', 'data' => $person]);
+    }
+
+    /***
+     * Generate Avatar and Save to Database
+     *
+     */
+    public function generateAvatar($id)
+    {
+        // connect to the live service on robohash.org
+        // generate a live image on robohash
+        // save that image from the link
+        // and add it to the database and save to storage
+        $person = Person::find($id);
+        if (!$person) {
+            return response()->json(['message' => 'Person not found!'], 404);
+        }
+
+        // use person's system id to generate a unique image
+        $url = "https://robohash.org/" . $person->system_id . ".png";
+        $contents = file_get_contents($url);
+        $name = substr($url, strpos($url, '/') + 1);
+        return $name;
+        Storage::put($name, $contents);
     }
 }
