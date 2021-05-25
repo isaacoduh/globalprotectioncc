@@ -87,16 +87,38 @@ class APIController extends Controller
         // generate a live image on robohash
         // save that image from the link
         // and add it to the database and save to storage
-        $person = Person::find($id);
-        if (!$person) {
-            return response()->json(['message' => 'Person not found!'], 404);
-        }
 
-        // use person's system id to generate a unique image
-        $url = "https://robohash.org/" . $person->system_id . ".png";
-        $contents = file_get_contents($url);
-        $name = substr($url, strpos($url, '/') + 1);
-        return $name;
-        Storage::put($name, $contents);
+
+        try {
+
+            $person = Person::find($id);
+            if (!$person) {
+                return response()->json(['message' => 'Person not found!'], 404);
+            }
+
+            // return $person;
+
+            // use person's system id to generate a unique image
+            $url = "https://robohash.org/" . $person->system_id . ".png";
+            $contents = file_get_contents($url);
+            $name = substr($url, strpos($url, '/') + 1);
+
+
+
+
+            // update the person
+            $person->avatar = $name;
+
+            $person->save();
+
+            // save image to database
+
+            $path = Storage::disk('public')->put($name, $contents);
+
+
+            return response()->json(['message' => 'Person Avatar Generated Successfully', 'data' => $person->avatar]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong!'], 500);
+        }
     }
 }
