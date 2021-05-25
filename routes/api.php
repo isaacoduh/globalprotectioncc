@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/person/generate', [APIController::class, 'generatePerson'])->name('person.generate');
+Route::get('/person/{id}', [APIController::class, 'show'])->name('person.show');

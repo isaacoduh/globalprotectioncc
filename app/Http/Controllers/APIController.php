@@ -57,4 +57,22 @@ class APIController extends Controller
             return response()->json(['message' => 'Something went wrong!'], 500);
         }
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $person = Person::find($id);
+
+        if (!$person) {
+            return response()->json(['message' => 'Person not found!'], 404);
+        }
+
+        // return json response
+        return response()->json(['message' => 'Person data retrieved!', 'data' => $person]);
+    }
 }
