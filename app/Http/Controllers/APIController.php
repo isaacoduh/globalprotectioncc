@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class APIController extends Controller
 {
+    public function latest()
+    {
+
+        $people = Person::orderBy('created_at', 'desc')->limit(10)->get();
+
+        return response()->json([
+            'data' => $people,
+
+        ], 200);
+    }
+
+
     /***
      * Retrive a record from API and Post to Table
      *

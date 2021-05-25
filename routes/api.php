@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/person/latest', [APIController::class, 'latest'])->name('person.latest');
 Route::get('/person/generate', [APIController::class, 'generatePerson'])->name('person.generate');
 Route::get('/person/{id}', [APIController::class, 'show'])->name('person.show');
 Route::get('/person/avatar/{id}', [APIController::class, 'generateAvatar'])->name('person.generate.avatar');
