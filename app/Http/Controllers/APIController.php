@@ -138,11 +138,7 @@ class APIController extends Controller
     {
         // declare an empty array to hold all data
         $stats = array();
-
-        $totalPeople = Person::count();
-
         $peopleCollection = Person::all();
-
         $genderArr = array();
         // filter collection by gender parameter
         $countMale = $peopleCollection->filter(function ($value, $Key) {
@@ -161,7 +157,10 @@ class APIController extends Controller
 
         $genderArr = array("Total Male" => $countMale, "Total Female" => $countFemale);
 
-        $stats = array("total persons" => $totalPeople, "Gender Statistics" => $genderArr, "Average Age" => $averageAge);
+        $countries = $peopleCollection->pluck('country')->all();
+        $countriesUnique = $peopleCollection->unique('country')->pluck('country')->all();
+
+        $stats = array("total persons" => $peopleCollection->count(), "Gender Statistics" => $genderArr, "Average Age" => $averageAge, "Countries (Non Unique)" => $countries, "Countries (Unique)" => $countriesUnique);
 
         return response()->json(['message' => 'Available Platform Statistics', 'data' => $stats]);
     }
