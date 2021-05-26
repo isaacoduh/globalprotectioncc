@@ -141,9 +141,27 @@ class APIController extends Controller
 
         $totalPeople = Person::count();
 
+        $peopleCollection = Person::all();
 
+        $genderArr = array();
+        // filter collection by gender parameter
+        $countMale = $peopleCollection->filter(function ($value, $Key) {
+            if ($value['gender'] == 'Male') {
+                return true;
+            }
+        })->count();
 
-        $stats = array("total persons" => $totalPeople);
+        $countFemale = $peopleCollection->filter(function ($value, $key) {
+            if ($value['gender'] == 'Female') {
+                return true;
+            }
+        })->count();
+
+        $averageAge = $peopleCollection->avg('age');
+
+        $genderArr = array("Total Male" => $countMale, "Total Female" => $countFemale);
+
+        $stats = array("total persons" => $totalPeople, "Gender Statistics" => $genderArr, "Average Age" => $averageAge);
 
         return response()->json(['message' => 'Available Platform Statistics', 'data' => $stats]);
     }
