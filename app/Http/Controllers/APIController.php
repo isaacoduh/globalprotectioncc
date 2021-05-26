@@ -133,4 +133,18 @@ class APIController extends Controller
             return response()->json(['message' => 'Something went wrong!'], 500);
         }
     }
+
+    public function generateStatistics()
+    {
+        // declare an empty array to hold all data
+        $stats = array();
+
+        $totalPeople = Person::count();
+
+
+
+        $stats = array("total persons" => $totalPeople);
+
+        return response()->json(['message' => 'Available Platform Statistics', 'data' => $stats]);
+    }
 }
