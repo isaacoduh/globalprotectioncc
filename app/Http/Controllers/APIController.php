@@ -133,4 +133,35 @@ class APIController extends Controller
             return response()->json(['message' => 'Something went wrong!'], 500);
         }
     }
+
+    public function generateStatistics()
+    {
+        // declare an empty array to hold all data
+        $stats = array();
+        $peopleCollection = Person::all();
+        $genderArr = array();
+        // filter collection by gender parameter
+        $countMale = $peopleCollection->filter(function ($value, $Key) {
+            if ($value['gender'] == 'Male') {
+                return true;
+            }
+        })->count();
+
+        $countFemale = $peopleCollection->filter(function ($value, $key) {
+            if ($value['gender'] == 'Female') {
+                return true;
+            }
+        })->count();
+
+        $averageAge = $peopleCollection->avg('age');
+
+        $genderArr = array("Total Male" => $countMale, "Total Female" => $countFemale);
+
+        $countries = $peopleCollection->pluck('country')->all();
+        $countriesUnique = $peopleCollection->unique('country')->pluck('country')->all();
+
+        $stats = array("total persons" => $peopleCollection->count(), "Gender Statistics" => $genderArr, "Average Age" => $averageAge, "Countries (Non Unique)" => $countries, "Countries (Unique)" => $countriesUnique);
+
+        return response()->json(['message' => 'Available Platform Statistics', 'data' => $stats]);
+    }
 }
